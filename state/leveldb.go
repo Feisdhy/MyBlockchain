@@ -1,4 +1,4 @@
-package abi
+package state
 
 import (
 	"github.com/syndtr/goleveldb/leveldb"
