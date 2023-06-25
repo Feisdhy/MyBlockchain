@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/state/snapshot"
@@ -38,8 +39,8 @@ func NewSnap(db ethdb.Database, stateCache state.Database, header *types.Header)
 	return snaps
 }
 
-func NewStateDB(header *types.Header, stateCache state.Database, snaps *snapshot.Tree) *state.StateDB {
-	stateDb, err := state.New(header.Root, stateCache, snaps)
+func NewStateDB(root common.Hash, stateCache state.Database, snaps *snapshot.Tree) *state.StateDB {
+	stateDb, err := state.New(root, stateCache, snaps)
 	if err != nil {
 		fmt.Println(stateDb, "New StateDB Error", err)
 		return nil

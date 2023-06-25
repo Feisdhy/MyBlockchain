@@ -1,6 +1,8 @@
 package state
 
-import "github.com/ethereum/go-ethereum/core/rawdb"
+import (
+	"github.com/ethereum/go-ethereum/core/rawdb"
+)
 
 const (
 	minCache    = 2048

@@ -1,37 +1,32 @@
 package state
 
 import (
+	"MyBlockchain/state/config"
+	"MyBlockchain/state/database"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/rawdb"
-	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/types"
+	"math/big"
 	"testing"
 )
 
+func TestGetAllAccounts(t *testing.T) {
+
+}
+
 func TestStateDB(t *testing.T) {
-	db1, _ := rawdb.NewLevelDBDatabase(
-		DefaultLevelDBConfig.File,
-		DefaultLevelDBConfig.Cache,
-		DefaultOpenOptions.Handles,
-		DefaultLevelDBConfig.Namespace,
-		DefaultLevelDBConfig.Readonly)
-	defer db1.Close()
+	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
+	sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
+	//sdb := database.NewStateDB(common.HexToHash("0x9ae8603e271652576a83b33908facc1780e237e553eb602b43c7183116d7bd51"), database.NewStateCache(db), nil)
 
-	//db, _ := rawdb.Open(DefaultOpenOptions)
-	//defer db.Close()
+	sdb.GetOrNewStateObject(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
+	sdb.SetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"), big.NewInt(1000))
+	hash, _ := sdb.Commit(false)
+	fmt.Println(hash)
 
-	sdb1, _ := state.New(types.EmptyRootHash, state.NewDatabase(db1), nil)
-	defer sdb1.Database().TrieDB().Commit(sdb1.IntermediateRoot(false), false)
+	balance := sdb.GetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
+	fmt.Println(balance)
 
-	//sdb.GetOrNewStateObject(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
-	//sdb.SetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"), big.NewInt(1000))
-
-	//hash, _ := sdb.Commit(false)
-	//fmt.Println(hash)
-
-	balance1 := sdb1.GetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
-	fmt.Println(balance1)
-
-	//sdb.SetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"), big.NewInt(1000))
+	sdb.Database().TrieDB().Commit(sdb.IntermediateRoot(false), false)
+	db.Close()
 }

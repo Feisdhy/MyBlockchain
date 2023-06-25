@@ -14,20 +14,20 @@ type RawConfig struct {
 func defaultRawConfig() *RawConfig {
 	if runtime.GOOS == "darwin" { // MacOS
 		return &RawConfig{
-			Path:      "/Users/darcywep/Projects/ethereum/execution/geth/chaindata",
+			Path:      "levelDB",
 			Cache:     2048,
 			Handles:   5120,
-			Ancient:   "/Users/darcywep/Projects/ethereum/execution/geth/chaindata/ancient",
-			Namespace: "eth/db/chaindata/",
+			Ancient:   "levelDB/ancient",
+			Namespace: "state/levelDB",
 			ReadOnly:  false,
 		}
 	} else {
 		return &RawConfig{
-			Path:      "/experiment/ethereum/geth/chaindata",
+			Path:      "levelDB",
 			Cache:     2048,
 			Handles:   5120,
-			Ancient:   "/experiment/ethereum/geth/chaindata/ancient",
-			Namespace: "eth/db/chaindata/",
+			Ancient:   "levelDB/ancient",
+			Namespace: "state/levelDB",
 			ReadOnly:  false,
 		}
 	}
@@ -43,13 +43,13 @@ func defaultStateDBConfig() *StateDBConfig {
 	if runtime.GOOS == "darwin" { // MacOS
 		return &StateDBConfig{
 			Cache:     614,
-			Journal:   "/Users/darcywep/Projects/ethereum/execution/geth/triecache",
+			Journal:   "levelDB/stateData",
 			Preimages: false,
 		}
 	} else {
 		return &StateDBConfig{
 			Cache:     614,
-			Journal:   "/experiment/ethereum/geth/triecache",
+			Journal:   "levelDB/stateData",
 			Preimages: false,
 		}
 	}
