@@ -26,6 +26,7 @@ func TestStateDB(t *testing.T) {
 
 	//sdb.GetOrNewStateObject(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
 	//sdb.SetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"), big.NewInt(1000))
+
 	//hash, _ := sdb.Commit(false)
 	//fmt.Println(hash)
 
