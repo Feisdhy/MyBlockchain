@@ -10,10 +10,9 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 	"log"
 	"math/big"
-	"testing"
 )
 
-func TestGetAllAccounts(t *testing.T) {
+func GetAllAccounts() {
 	db1, _ := openLeveldb(nativeDBPath, true)
 	defer db1.Close()
 
@@ -54,7 +53,7 @@ func TestGetAllAccounts(t *testing.T) {
 	fmt.Println("The number of accounts in all blocks is", len(mapping))
 }
 
-func TestShowAllAccounts(t *testing.T) {
+func ShowAllAccounts() {
 	db, _ := openLeveldb(accountDBPath, true)
 	defer db.Close()
 
@@ -78,7 +77,7 @@ func TestShowAllAccounts(t *testing.T) {
 	}
 }
 
-func TestStateDB(t *testing.T) {
+func StateDB() {
 	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
 	defer db.Close()
 
@@ -92,32 +91,6 @@ func TestStateDB(t *testing.T) {
 
 	balance := sdb.GetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
 	fmt.Println(balance)
-
-	sdb.Database().TrieDB().Commit(sdb.IntermediateRoot(false), false)
-}
-
-func TestStateDBForTenThousand(t *testing.T) {
-	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
-	defer db.Close()
-
-	nativedb, _ := openLeveldb(nativeDBPath, true)
-	defer nativedb.Close()
-
-	min, max, addSpan := big.NewInt(12000001), big.NewInt(12000002), big.NewInt(1)
-	for i, count := min, 0; i.Cmp(max) == -1; i = i.Add(i, addSpan) {
-		txs, _ := pureData.GetTransactionsByNumber(nativedb, i)
-
-		for _, tx := range txs {
-			count += 1
-			fmt.Println(tx.Hash)
-			for _, transfer := range tx.Transfers {
-				fmt.Println(transfer)
-			}
-			fmt.Println()
-		}
-	}
-
-	sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
 
 	sdb.Database().TrieDB().Commit(sdb.IntermediateRoot(false), false)
 }

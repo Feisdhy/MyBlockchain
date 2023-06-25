@@ -8,12 +8,12 @@ const (
 	//contract leveldb用于保存一行存储全部区块的智能合约交易
 	//contract abi leveldb用于保存全部智能合约地址以及其对应的abi
 	//block transaction leveldb用于保存处理后的交易数据
-	nativeDbPath      = "leveldb/native leveldb"
-	contractDbPath    = "leveldb/contract leveldb"
-	abiDbPath         = "leveldb/contract abi leveldb"
-	transactionDbPath = "leveldb/block transaction leveldb"
+	nativeDBPath      = "leveldb/native leveldb"
+	contractDBPath    = "leveldb/contract leveldb"
+	abiDBPath         = "leveldb/contract abi leveldb"
+	transactionDBPath = "leveldb/block transaction leveldb"
 
-	contractLeveldbKey = "All addresses"
+	contractLevelDBKey = "All addresses"
 )
 
 type (

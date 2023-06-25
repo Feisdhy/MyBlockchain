@@ -1,22 +1,41 @@
 package state
 
 import (
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/rawdb"
+	"math/big"
 )
 
 const (
-	minCache    = 2048
-	minHandles  = 2048
-	levelDBPath = "levelDB"
+	minCache      = 2048
+	minHandles    = 2048
+	nativeDBPath  = "../abi/leveldb/native leveldb"
+	accountDBPath = "levelDB/account leveldb"
 )
 
-type levelDBConfig struct {
-	File      string
-	Cache     int
-	Handles   int
-	Namespace string
-	Readonly  bool
-}
+type (
+	levelDBConfig struct {
+		File      string
+		Cache     int
+		Handles   int
+		Namespace string
+		Readonly  bool
+	}
+
+	//处理后的账户数据的数据格式
+	accountFormat struct {
+		Hash       string
+		IsContract bool
+	}
+
+	account struct {
+		Address  common.Address
+		Nonce    uint64
+		Balance  *big.Int
+		Root     common.Hash // merkle root of the storage trie
+		CodeHash []byte
+	}
+)
 
 var DefaultLevelDBConfig = levelDBConfig{
 	File:      "levelDB",

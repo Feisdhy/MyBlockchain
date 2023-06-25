@@ -1,6 +1,16 @@
 package database
 
-import "runtime"
+import (
+	"runtime"
+)
+
+const (
+	StateDBPath1 = "levelDB/trie leveldb in 1W"
+	StateDBPath2 = "levelDB/trie leveldb in 10W"
+	StateDBPath3 = "levelDB/trie leveldb in 100W"
+	StateDBPath4 = "levelDB/trie leveldb in 1000W"
+	StateDBPath5 = "levelDB/trie leveldb in 10000W"
+)
 
 type RawConfig struct {
 	Path      string
@@ -14,20 +24,20 @@ type RawConfig struct {
 func defaultRawConfig() *RawConfig {
 	if runtime.GOOS == "darwin" { // MacOS
 		return &RawConfig{
-			Path:      "levelDB",
+			Path:      StateDBPath1,
 			Cache:     2048,
 			Handles:   5120,
-			Ancient:   "levelDB/ancient",
-			Namespace: "state/levelDB",
+			Ancient:   StateDBPath1 + "/ancient",
+			Namespace: "state/" + StateDBPath1,
 			ReadOnly:  false,
 		}
 	} else {
 		return &RawConfig{
-			Path:      "levelDB",
+			Path:      StateDBPath1,
 			Cache:     2048,
 			Handles:   5120,
-			Ancient:   "levelDB/ancient",
-			Namespace: "state/levelDB",
+			Ancient:   StateDBPath1 + "/ancient",
+			Namespace: "state/" + StateDBPath1,
 			ReadOnly:  false,
 		}
 	}
@@ -43,13 +53,13 @@ func defaultStateDBConfig() *StateDBConfig {
 	if runtime.GOOS == "darwin" { // MacOS
 		return &StateDBConfig{
 			Cache:     614,
-			Journal:   "levelDB/stateData",
+			Journal:   "levelDB/state leveldb",
 			Preimages: false,
 		}
 	} else {
 		return &StateDBConfig{
 			Cache:     614,
-			Journal:   "levelDB/stateData",
+			Journal:   "levelDB/state leveldb",
 			Preimages: false,
 		}
 	}

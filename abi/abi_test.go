@@ -15,13 +15,13 @@ import (
 )
 
 func TestGetContract(t *testing.T) {
-	db, err := openLeveldb(nativeDbPath, true) // get native transaction or merge transaction
+	db, err := openLeveldb(nativeDBPath, true) // get native transaction or merge transaction
 	if err != nil {
 		fmt.Println("open leveldb error,", err)
 		return
 	}
 
-	file, err := openLeveldb(contractDbPath, false)
+	file, err := openLeveldb(contractDBPath, false)
 	if err != nil {
 		fmt.Println("open leveldb error,", err)
 		return
@@ -55,7 +55,7 @@ func TestGetContract(t *testing.T) {
 
 	value = value[:len(value)-1]
 	// 写入键值对到 LevelDB
-	err = file.Put([]byte(contractLeveldbKey), []byte(value), nil)
+	err = file.Put([]byte(contractLevelDBKey), []byte(value), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,13 +65,13 @@ func TestGetContract(t *testing.T) {
 }
 
 func TestGetABI(t *testing.T) {
-	file1, err := openLeveldb(contractDbPath, true)
+	file1, err := openLeveldb(contractDBPath, true)
 	if err != nil {
 		fmt.Println("open leveldb error,", err)
 		return
 	}
 
-	file2, err := openLeveldb(abiDbPath, false)
+	file2, err := openLeveldb(abiDBPath, false)
 	if err != nil {
 		fmt.Println("open leveldb error,", err)
 		return
@@ -79,7 +79,7 @@ func TestGetABI(t *testing.T) {
 
 	//创建连接指定网络的客户端
 	client := etherscan.New(etherscan.Mainnet, "D5YVTPXBBYJCKGGVK9VRPJQBFCNXPFZ1AK")
-	contract, err := file1.Get([]byte(contractLeveldbKey), nil)
+	contract, err := file1.Get([]byte(contractLevelDBKey), nil)
 	if err != nil {
 		fmt.Println("read leveldb err,", err)
 		return
@@ -126,19 +126,19 @@ func TestGetABI(t *testing.T) {
 }
 
 func TestHandleAllBlocks(t *testing.T) {
-	db, err := openLeveldb(nativeDbPath, true)
+	db, err := openLeveldb(nativeDBPath, true)
 	if err != nil {
 		fmt.Println("open levelDB err,", err)
 		return
 	}
 
-	file1, err := openLeveldb(abiDbPath, true)
+	file1, err := openLeveldb(abiDBPath, true)
 	if err != nil {
 		fmt.Println("open levelDB err,", err)
 		return
 	}
 
-	file2, err := openLeveldb(transactionDbPath, false)
+	file2, err := openLeveldb(transactionDBPath, false)
 	if err != nil {
 		fmt.Println("open levelDB err,", err)
 		return
