@@ -37,6 +37,12 @@ type (
 	}
 )
 
+var (
+	base     = big.NewInt(10)
+	exponent = big.NewInt(21)
+	Balance  = new(big.Int).Exp(base, exponent, nil)
+)
+
 var DefaultLevelDBConfig = levelDBConfig{
 	File:      "levelDB",
 	Cache:     2024,

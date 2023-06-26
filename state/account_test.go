@@ -4,7 +4,6 @@ import (
 	"crypto/ecdsa"
 	"encoding/hex"
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"testing"
 )
@@ -66,5 +65,4 @@ func TestAccount(t *testing.T) {
 	fmt.Println("Private key:", privateKeyHex)
 	fmt.Println("Public key:", publicKeyHex)
 	fmt.Println("Address:", addressHex)
-	fmt.Println(common.Address{})
 }
