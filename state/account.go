@@ -2,7 +2,6 @@ package state
 
 import (
 	"crypto/ecdsa"
-	"encoding/hex"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -25,15 +24,15 @@ func Address() common.Address {
 
 	//从公钥生成以太坊地址
 	address := crypto.PubkeyToAddress(*publicKeyECDSA)
-	addressHex := address.Hex()
-	privateKeyBytes := crypto.FromECDSA(privateKey)
-	privateKeyHex := hex.EncodeToString(privateKeyBytes)
-	publicKeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
-	publicKeyHex := hex.EncodeToString(publicKeyBytes)
+	//addressHex := address.Hex()
+	//privateKeyBytes := crypto.FromECDSA(privateKey)
+	//privateKeyHex := hex.EncodeToString(privateKeyBytes)
+	//publicKeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
+	//publicKeyHex := hex.EncodeToString(publicKeyBytes)
 
-	fmt.Println("Private key:", privateKeyHex)
-	fmt.Println("Public key:", publicKeyHex)
-	fmt.Println("Address:", addressHex)
+	//fmt.Println("Private key:", privateKeyHex)
+	//fmt.Println("Public key:", publicKeyHex)
+	//fmt.Println("Address:", addressHex)
 
 	return address
 }

@@ -81,7 +81,6 @@ func TestShowAllAccounts(t *testing.T) {
 	defer iter.Release()
 
 	// 遍历键值对
-
 	for count := 1; iter.Next(); {
 		key := string(iter.Key())
 		value := string(iter.Value())
@@ -101,17 +100,19 @@ func TestStateDB(t *testing.T) {
 	defer db.Close()
 
 	//sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
-	sdb := database.NewStateDB(common.HexToHash("0xeec5a7aed79ef01126db0d292ff4abd68eab16db3ff2df431e2f8254f82ab378"), database.NewStateCache(db), nil)
+	sdb := database.NewStateDB(common.HexToHash("0x9ae8603e271652576a83b33908facc1780e237e553eb602b43c7183116d7bd51"), database.NewStateCache(db), nil)
 
 	//sdb.GetOrNewStateObject(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
 	//sdb.SetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"), big.NewInt(1000))
 	//hash, _ := sdb.Commit(false)
 	//fmt.Println(hash)
 
-	balance := sdb.GetBalance(common.HexToAddress("0xfffffffFf15AbF397dA76f1dcc1A1604F45126DB"))
+	balance := sdb.GetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
 	fmt.Println(balance)
 
-	//sdb.Database().TrieDB().Commit(sdb.IntermediateRoot(false), false)
+	//hash, _ := sdb.Commit(false)
+	//sdb.Database().TrieDB().Commit(hash, false)
+	//fmt.Println(hash)
 }
 
 func TestShowAccountsAndRoot(t *testing.T) {
@@ -535,7 +536,8 @@ func TestStateDBForAllRealData(t *testing.T) {
 	accountdb, _ := openLeveldb(StateDBPath4+"/accounts", false)
 	defer accountdb.Close()
 
-	count := 1000001
+	//count := 1000001
+	count := 1
 	batch := new(leveldb.Batch)
 	min, max, addSpan := big.NewInt(12000001), big.NewInt(12050000), big.NewInt(1)
 	for i := min; i.Cmp(max) == -1; i = i.Add(i, addSpan) {
@@ -564,7 +566,7 @@ func TestStateDBForAllRealData(t *testing.T) {
 							if balance.Cmp(big.NewInt(0)) == 0 && count <= 3000000 {
 								sdb.GetOrNewStateObject(value.From.Address)
 								sdb.SetBalance(value.From.Address, Balance)
-								fmt.Println("Account", count, "Block", i.String(), "Address", value.From.Address, "Balance", Balance)
+								//fmt.Println("Account", count, "Block", i.String(), "Address", value.From.Address, "Balance", Balance)
 								batch.Put([]byte(value.From.Address.String()), []byte(""))
 								count += 1
 							}
@@ -575,7 +577,7 @@ func TestStateDBForAllRealData(t *testing.T) {
 							if balance.Cmp(big.NewInt(0)) == 0 && count <= 3000000 {
 								sdb.GetOrNewStateObject(value.To.Address)
 								sdb.SetBalance(value.To.Address, Balance)
-								fmt.Println("Account", count, "Block", i.String(), "Address", value.To.Address, "Balance", Balance)
+								//fmt.Println("Account", count, "Block", i.String(), "Address", value.To.Address, "Balance", Balance)
 								batch.Put([]byte(value.To.Address.String()), []byte(""))
 								count += 1
 							}
@@ -587,7 +589,7 @@ func TestStateDBForAllRealData(t *testing.T) {
 						if balance.Cmp(big.NewInt(0)) == 0 && count <= 3000000 {
 							sdb.GetOrNewStateObject(value.Contract)
 							sdb.SetBalance(value.Contract, Balance)
-							fmt.Println("Account", count, "Block", i.String(), "Address", value.Contract, "Balance", Balance, "Slot", value.Slot, "Value", value.PreValue)
+							//fmt.Println("Account", count, "Block", i.String(), "Address", value.Contract, "Balance", Balance, "Slot", value.Slot, "Value", value.PreValue)
 							batch.Put([]byte(value.Contract.String()), []byte(""))
 							count += 1
 						}
@@ -624,6 +626,8 @@ func TestStateDBForAllRealData(t *testing.T) {
 			hash, _ := sdb.Commit(false)
 			sdb.Database().TrieDB().Commit(hash, false)
 
+			fmt.Println("Block", i.String(), "Account", count-1)
+
 			//tmp := new(big.Int).Set(i)
 			//if tmp.Mod(tmp, big.NewInt(1000)).Cmp(big.NewInt(0)) == 0 {
 			//	sdb = database.NewStateDB(hash, database.NewStateCache(db), nil)
@@ -638,5 +642,207 @@ func TestStateDBForAllRealData(t *testing.T) {
 	sdb.Database().TrieDB().Commit(hash, false)
 
 	fmt.Println("The number of Accounts has achieved", count, "!")
+	accountdb.Put([]byte(rootHash), []byte(sdb.IntermediateRoot(false).String()), nil)
+}
+
+func TestCreateTenMillion(t *testing.T) {
+	db, _ := openLeveldb(StateDBPath5+"/accounts", true)
+	defer db.Close()
+
+	file, _ := openLeveldb(StateDBPath5+"/additional accounts", false)
+	defer file.Close()
+
+	// 创建迭代器
+	iter := db.NewIterator(nil, nil)
+	defer iter.Release()
+
+	mapping := make(map[string]string)
+
+	// 遍历键值对
+	for count := 1; iter.Next(); {
+		key := string(iter.Key())
+		value := string(iter.Value())
+		// 处理键值对，例如打印到控制台
+		log.Printf("%d: Key: %s, Value: %s", count, key, value)
+		count++
+		mapping[key] = ""
+	}
+
+	// 检查迭代器错误
+	if err := iter.Error(); err != nil {
+		log.Fatal(err)
+	}
+
+	batch := new(leveldb.Batch)
+	for i := 1; i <= 7165114; i++ {
+		for {
+			address := Address().String()
+			_, ok := mapping[address]
+			if !ok {
+				mapping[address] = ""
+				batch.Put([]byte(address), []byte("0"))
+				break
+			}
+		}
+
+		if i%100000 == 0 {
+			fmt.Println("The number of accounts has achieved", i+2834886)
+			file.Write(batch, nil)
+			batch.Reset()
+		} else if i == 7165114 {
+			fmt.Println("The number of accounts has achieved", i+2834886)
+		}
+	}
+
+	file.Write(batch, nil)
+	batch.Reset()
+}
+
+func TestCombineTenMillion(t *testing.T) {
+	db, _ := openLeveldb(StateDBPath5+"/accounts", true)
+	defer db.Close()
+
+	db1, _ := openLeveldb(StateDBPath5+"/additional accounts", true)
+	defer db1.Close()
+
+	file, _ := openLeveldb(StateDBPath5+"/all accounts", false)
+	defer file.Close()
+
+	// 创建迭代器
+	iter := db.NewIterator(nil, nil)
+	defer iter.Release()
+
+	count := 1
+	batch := new(leveldb.Batch)
+	// 遍历键值对
+	for iter.Next() {
+		key := string(iter.Key())
+		value := string(iter.Value())
+		if key == rootHash {
+			break
+		}
+
+		// 处理键值对，例如打印到控制台
+		log.Printf("%d: Key: %s, Value: %s", count, key, value)
+		batch.Put([]byte(key), []byte(""))
+
+		if count%100000 == 0 {
+			file.Write(batch, nil)
+			batch.Reset()
+		}
+		count++
+	}
+
+	// 检查迭代器错误
+	if err := iter.Error(); err != nil {
+		log.Fatal(err)
+	}
+
+	// 创建迭代器
+	iter1 := db1.NewIterator(nil, nil)
+	defer iter1.Release()
+
+	// 遍历键值对
+	for iter1.Next() {
+		key := string(iter1.Key())
+		value := string(iter1.Value())
+		// 处理键值对，例如打印到控制台
+		log.Printf("%d: Key: %s, Value: %s", count, key, value)
+		batch.Put([]byte(key), []byte(""))
+
+		if count%100000 == 0 {
+			file.Write(batch, nil)
+			batch.Reset()
+		}
+		count++
+	}
+
+	// 检查迭代器错误
+	if err := iter.Error(); err != nil {
+		log.Fatal(err)
+	}
+
+	file.Write(batch, nil)
+	batch.Reset()
+}
+
+func TestGetAccountInTenMillion(t *testing.T) {
+	db, _ := openLeveldb(StateDBPath5+"/accounts", true)
+	defer db.Close()
+
+	db1, _ := openLeveldb(StateDBPath5+"/all accounts", true)
+	defer db1.Close()
+
+	// 创建迭代器
+	iter := db.NewIterator(nil, nil)
+	defer iter.Release()
+
+	// 遍历键值对
+
+	for count := 1; iter.Next(); {
+		key := string(iter.Key())
+		value := string(iter.Value())
+		// 处理键值对，例如打印到控制台
+		log.Printf("%d: Key: %s, Value: %s", count, key, value)
+		count += 1
+	}
+
+	// 检查迭代器错误
+	if err := iter.Error(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func TestStateDBForHundredMillion(t *testing.T) {
+	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
+	defer db.Close()
+
+	//sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
+	sdb := database.NewStateDB(common.HexToHash("0xa18bd9c951b0d0fd85e3692716a2e60cde7037044aaa886c3be2e501e7378264"), database.NewStateCache(db), nil)
+
+	accountdb, _ := openLeveldb(StateDBPath5+"/accounts", false)
+	defer accountdb.Close()
+
+	additiondb, _ := openLeveldb(StateDBPath5+"/additional accounts", true)
+	defer additiondb.Close()
+
+	// 创建迭代器
+	iter := additiondb.NewIterator(nil, nil)
+	defer iter.Release()
+
+	// 遍历键值对
+	count := 1
+	batch := new(leveldb.Batch)
+	for iter.Next() {
+		key := string(iter.Key())
+		batch.Put([]byte(key), []byte(""))
+		sdb.SetBalance(common.HexToAddress(key), Balance)
+		fmt.Println("Account", 2834886+count, "Address", key, "Balance", Balance)
+
+		if count%100000 == 0 {
+			sdb.Commit(false)
+			sdb.Database().TrieDB().Commit(sdb.IntermediateRoot(false), false)
+
+			accountdb.Write(batch, nil)
+			batch.Reset()
+
+			//fmt.Println("The number of accounts has achieved", 2834886+count)
+		}
+		count += 1
+	}
+
+	//count--
+	//fmt.Println("The number of accounts has achieved", 2834886+count)
+
+	// 检查迭代器错误
+	if err := iter.Error(); err != nil {
+		log.Fatal(err)
+	}
+
+	sdb.Commit(false)
+	sdb.Database().TrieDB().Commit(sdb.IntermediateRoot(false), false)
+
+	accountdb.Write(batch, nil)
+	batch.Reset()
 	accountdb.Put([]byte(rootHash), []byte(sdb.IntermediateRoot(false).String()), nil)
 }

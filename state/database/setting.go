@@ -5,12 +5,12 @@ import (
 )
 
 const (
-	StateDBPath1 = "levelDB/trie leveldb in 1W"
-	StateDBPath2 = "levelDB/trie leveldb in 10W"
-	StateDBPath3 = "levelDB/trie leveldb in 100W"
-	StateDBPath4 = "levelDB/trie leveldb in 2834886"
-	StateDBPath5 = "levelDB/trie leveldb in 1000W"
-	StateDBPath6 = "levelDB/trie leveldb in 10000W"
+	StateDBPath1 = "D:/Project/leveldb/state/trie leveldb in 1W"
+	StateDBPath2 = "D:/Project/leveldb/state/trie leveldb in 10W"
+	StateDBPath3 = "D:/Project/leveldb/state/trie leveldb in 100W"
+	StateDBPath4 = "D:/Project/leveldb/state/trie leveldb in 2834886"
+	StateDBPath5 = "D:/Project/leveldb/state/trie leveldb in 1000W"
+	StateDBPath6 = "D:/Project/leveldb/state/trie leveldb in 10000W"
 )
 
 type RawConfig struct {
@@ -23,7 +23,7 @@ type RawConfig struct {
 }
 
 func defaultRawConfig() *RawConfig {
-	path := StateDBPath4
+	path := StateDBPath5
 	if runtime.GOOS == "darwin" { // MacOS
 		return &RawConfig{
 			Path:      path,
