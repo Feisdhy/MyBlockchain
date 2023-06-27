@@ -11,6 +11,14 @@ const (
 	minHandles    = 2048
 	nativeDBPath  = "../abi/leveldb/native leveldb"
 	accountDBPath = "levelDB/account leveldb"
+
+	rootHash     = "ROOT_HASH"
+	StateDBPath1 = "levelDB/trie leveldb in 1W"
+	StateDBPath2 = "levelDB/trie leveldb in 10W"
+	StateDBPath3 = "levelDB/trie leveldb in 100W"
+	StateDBPath4 = "levelDB/trie leveldb in 2834886"
+	StateDBPath5 = "levelDB/trie leveldb in 1000W"
+	StateDBPath6 = "levelDB/trie leveldb in 10000W"
 )
 
 type (

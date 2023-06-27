@@ -8,8 +8,9 @@ const (
 	StateDBPath1 = "levelDB/trie leveldb in 1W"
 	StateDBPath2 = "levelDB/trie leveldb in 10W"
 	StateDBPath3 = "levelDB/trie leveldb in 100W"
-	StateDBPath4 = "levelDB/trie leveldb in 1000W"
-	StateDBPath5 = "levelDB/trie leveldb in 10000W"
+	StateDBPath4 = "levelDB/trie leveldb in 2834886"
+	StateDBPath5 = "levelDB/trie leveldb in 1000W"
+	StateDBPath6 = "levelDB/trie leveldb in 10000W"
 )
 
 type RawConfig struct {
@@ -22,22 +23,23 @@ type RawConfig struct {
 }
 
 func defaultRawConfig() *RawConfig {
+	path := StateDBPath4
 	if runtime.GOOS == "darwin" { // MacOS
 		return &RawConfig{
-			Path:      StateDBPath1,
+			Path:      path,
 			Cache:     2048,
 			Handles:   5120,
-			Ancient:   StateDBPath1 + "/ancient",
-			Namespace: "state/" + StateDBPath1,
+			Ancient:   path + "/ancient",
+			Namespace: "state/" + path,
 			ReadOnly:  false,
 		}
 	} else {
 		return &RawConfig{
-			Path:      StateDBPath1,
+			Path:      path,
 			Cache:     2048,
 			Handles:   5120,
-			Ancient:   StateDBPath1 + "/ancient",
-			Namespace: "state/" + StateDBPath1,
+			Ancient:   path + "/ancient",
+			Namespace: "state/" + path,
 			ReadOnly:  false,
 		}
 	}
