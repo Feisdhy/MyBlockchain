@@ -23,7 +23,7 @@ type RawConfig struct {
 }
 
 func defaultRawConfig() *RawConfig {
-	path := StateDBPath5
+	path := StateDBPath6
 	if runtime.GOOS == "darwin" { // MacOS
 		return &RawConfig{
 			Path:      path,

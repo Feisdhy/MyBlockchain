@@ -116,7 +116,7 @@ func TestStateDB(t *testing.T) {
 }
 
 func TestShowAccountsAndRoot(t *testing.T) {
-	db, _ := openLeveldb(StateDBPath4+"/accounts", true)
+	db, _ := openLeveldb(StateDBPath5+"/all accounts", true)
 	defer db.Close()
 
 	// 创建迭代器
@@ -793,7 +793,7 @@ func TestGetAccountInTenMillion(t *testing.T) {
 	}
 }
 
-func TestStateDBForHundredMillion(t *testing.T) {
+func TestStateDBForTenMillion(t *testing.T) {
 	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
 	defer db.Close()
 
@@ -845,4 +845,70 @@ func TestStateDBForHundredMillion(t *testing.T) {
 	accountdb.Write(batch, nil)
 	batch.Reset()
 	accountdb.Put([]byte(rootHash), []byte(sdb.IntermediateRoot(false).String()), nil)
+}
+
+func TestCreateHundredMillion(t *testing.T) {
+	db, _ := openLeveldb(StateDBPath6+"/all accounts", false)
+	defer db.Close()
+
+	batch := new(leveldb.Batch)
+	for i := 1; i <= 90000000; i++ {
+		for {
+			address := Address().String()
+			_, err := db.Get([]byte(address), nil)
+			if err != nil {
+				batch.Put([]byte(address), []byte(""))
+				break
+			}
+		}
+
+		if i%100000 == 0 {
+			fmt.Println("The number of accounts has achieved", i+10000000)
+			db.Write(batch, nil)
+			batch.Reset()
+		} else if i == 90000000 {
+			fmt.Println("The number of accounts has achieved", i+10000000)
+		}
+	}
+
+	db.Write(batch, nil)
+	batch.Reset()
+}
+
+func TestStateDBForHundredMillion(t *testing.T) {
+	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
+	defer db.Close()
+
+	sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
+	//sdb := database.NewStateDB(common.HexToHash("0xa18bd9c951b0d0fd85e3692716a2e60cde7037044aaa886c3be2e501e7378264"), database.NewStateCache(db), nil)
+
+	accountdb, _ := openLeveldb(StateDBPath6+"/all accounts", false)
+	defer accountdb.Close()
+
+	// 创建迭代器
+	iter := accountdb.NewIterator(nil, nil)
+	defer iter.Release()
+
+	// 遍历键值对
+	count := 1
+	for iter.Next() {
+		key := string(iter.Key())
+		sdb.SetBalance(common.HexToAddress(key), Balance)
+
+		if count%100000 == 0 {
+			hash, _ := sdb.Commit(false)
+			sdb.Database().TrieDB().Commit(hash, false)
+			log.Println("The number of accounts has achieved", count)
+		}
+		count += 1
+	}
+
+	// 检查迭代器错误
+	if err := iter.Error(); err != nil {
+		log.Fatal(err)
+	}
+
+	hash, _ := sdb.Commit(false)
+	sdb.Database().TrieDB().Commit(hash, false)
+	accountdb.Put([]byte(rootHash), []byte(hash.String()), nil)
 }
