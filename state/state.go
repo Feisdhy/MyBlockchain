@@ -119,7 +119,7 @@ func MPTForHundredMillionOne() {
 	iter := accountdb.NewIterator(nil, nil)
 	defer iter.Release()
 
-	log.Println("The number of accounts has achieved", 0)
+	log.Println("The number of accounts has achieved", 0, "The time of the commitment is", 0)
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of accounts has achieved", 0)
 
 	// 遍历键值对
@@ -129,13 +129,11 @@ func MPTForHundredMillionOne() {
 		sdb.SetBalance(common.HexToAddress(key), Balance)
 
 		if count%100000 == 0 {
-			sdb.Commit(false)
-			log.Println("The number of accounts has achieved", count)
+			startTime := time.Now()
+			hash, _ := sdb.Commit(false)
+			sdb.Database().TrieDB().Commit(hash, false)
+			log.Println("The number of accounts has achieved", count, "The time of the commitment is", time.Since(startTime).Nanoseconds())
 			fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of accounts has achieved", count)
-		}
-
-		if count%1000000 == 0 {
-			sdb.Database().TrieDB().Commit(sdb.IntermediateRoot(false), false)
 		}
 
 		count += 1
@@ -148,7 +146,6 @@ func MPTForHundredMillionOne() {
 
 	hash, _ := sdb.Commit(false)
 	sdb.Database().TrieDB().Commit(hash, false)
-	//accountdb.Put([]byte(rootHash), []byte(hash.String()), nil)
 	log.Println(rootHash, hash.String())
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), rootHash, hash.String())
 }
@@ -202,7 +199,10 @@ func MPTForHundredMillionTwo() {
 }
 
 func TestForHundredMillionOne() {
-	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
+	db, err := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer db.Close()
 
 	//sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
