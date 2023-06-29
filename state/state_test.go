@@ -875,19 +875,21 @@ func TestCreateHundredMillion(t *testing.T) {
 	batch.Reset()
 }
 
-func TestStateDBForHundredMillion(t *testing.T) {
+func TestStateDBForHundredMillionOne(t *testing.T) {
 	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
 	defer db.Close()
 
 	sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
 	//sdb := database.NewStateDB(common.HexToHash("0xa18bd9c951b0d0fd85e3692716a2e60cde7037044aaa886c3be2e501e7378264"), database.NewStateCache(db), nil)
 
-	accountdb, _ := openLeveldb(StateDBPath6+"/all accounts", false)
+	accountdb, _ := openLeveldb(StateDBPath6+"/all accounts", true)
 	defer accountdb.Close()
 
 	// 创建迭代器
 	iter := accountdb.NewIterator(nil, nil)
 	defer iter.Release()
+
+	log.Println("The number of accounts has achieved", 0)
 
 	// 遍历键值对
 	count := 1
@@ -896,10 +898,14 @@ func TestStateDBForHundredMillion(t *testing.T) {
 		sdb.SetBalance(common.HexToAddress(key), Balance)
 
 		if count%100000 == 0 {
-			hash, _ := sdb.Commit(false)
-			sdb.Database().TrieDB().Commit(hash, false)
+			sdb.Commit(false)
 			log.Println("The number of accounts has achieved", count)
 		}
+
+		if count%1000000 == 0 {
+			sdb.Database().TrieDB().Commit(sdb.IntermediateRoot(false), false)
+		}
+
 		count += 1
 	}
 
@@ -910,5 +916,50 @@ func TestStateDBForHundredMillion(t *testing.T) {
 
 	hash, _ := sdb.Commit(false)
 	sdb.Database().TrieDB().Commit(hash, false)
+	//accountdb.Put([]byte(rootHash), []byte(hash.String()), nil)
+	log.Println(rootHash, hash.String())
+}
+
+func TestStateDBForHundredMillionTwo(t *testing.T) {
+	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
+	defer db.Close()
+
+	//sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
+	sdb := database.NewStateDB(common.HexToHash("0x5be16d8197509546ee5ef661a2c8c06ca088d1daa1528696dfa91bf8f7935b68"), database.NewStateCache(db), nil)
+
+	nativedb, _ := openLeveldb(nativeDBPath, true)
+	defer nativedb.Close()
+
+	accountdb, _ := openLeveldb(StateDBPath6+"/all accounts", false)
+	defer accountdb.Close()
+
+	min, max, addSpan := big.NewInt(12000001), big.NewInt(12050000), big.NewInt(1)
+	for i := min; i.Cmp(max) == -1; i = i.Add(i, addSpan) {
+		txs, _ := pureData.GetTransactionsByNumber(nativedb, i)
+
+		for _, tx := range txs {
+			if tx != nil && len(tx.Transfers) > 0 {
+				for _, trs := range tx.Transfers {
+					if trs.GetLabel() == 1 {
+						value, _ := trs.(*transaction.StorageTransition)
+						hash := sdb.GetState(value.Contract, value.Slot)
+						if reflect.DeepEqual(hash, common.Hash{}) {
+							sdb.SetState(value.Contract, value.Slot, value.PreValue)
+							//fmt.Println("Address", value.Contract, "Slot", value.Slot, "Value", value.PreValue)
+						}
+					}
+				}
+			}
+		}
+
+		hash, _ := sdb.Commit(false)
+		sdb.Database().TrieDB().Commit(hash, false)
+
+		log.Println("Block", i.String(), "is completed!")
+	}
+
+	hash, _ := sdb.Commit(false)
+	sdb.Database().TrieDB().Commit(hash, false)
 	accountdb.Put([]byte(rootHash), []byte(hash.String()), nil)
+	log.Println(rootHash, hash.String())
 }

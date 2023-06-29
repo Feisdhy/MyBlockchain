@@ -9,7 +9,7 @@ import (
 const (
 	minCache      = 2048
 	minHandles    = 2048
-	nativeDBPath  = "D:/Project/leveldb/abi/native leveldb"
+	nativeDBPath  = "../leveldb/native"
 	accountDBPath = "D:/Project/leveldb/state/account leveldb"
 
 	rootHash     = "ROOT_HASH"
@@ -18,7 +18,7 @@ const (
 	StateDBPath3 = "D:/Project/leveldb/state/trie leveldb in 100W"
 	StateDBPath4 = "D:/Project/leveldb/state/trie leveldb in 2834886"
 	StateDBPath5 = "D:/Project/leveldb/state/trie leveldb in 1000W"
-	StateDBPath6 = "D:/Project/leveldb/state/trie leveldb in 10000W"
+	StateDBPath6 = "../leveldb"
 )
 
 type (

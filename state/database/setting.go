@@ -10,7 +10,7 @@ const (
 	StateDBPath3 = "D:/Project/leveldb/state/trie leveldb in 100W"
 	StateDBPath4 = "D:/Project/leveldb/state/trie leveldb in 2834886"
 	StateDBPath5 = "D:/Project/leveldb/state/trie leveldb in 1000W"
-	StateDBPath6 = "D:/Project/leveldb/state/trie leveldb in 10000W"
+	StateDBPath6 = "../leveldb"
 )
 
 type RawConfig struct {
