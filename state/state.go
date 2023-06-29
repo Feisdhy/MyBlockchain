@@ -206,21 +206,40 @@ func TestForHundredMillionOne() {
 	defer db.Close()
 
 	//sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
-	sdb := database.NewStateDB(common.HexToHash("0xa18bd9c951b0d0fd85e3692716a2e60cde7037044aaa886c3be2e501e7378264"), database.NewStateCache(db), nil)
+	sdb := database.NewStateDB(common.HexToHash("0x5be16d8197509546ee5ef661a2c8c06ca088d1daa1528696dfa91bf8f7935b68"), database.NewStateCache(db), nil)
 
 	accountdb, _ := openLeveldb(StateDBPath6+"/accounts", true)
 	defer accountdb.Close()
 
+	file, _ := os.OpenFile(StateDBPath6+"/output2.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	defer file.Close()
+
+	// 设置日志输出到文件
+	log.SetOutput(file)
+
 	// 创建迭代器
 	iter := accountdb.NewIterator(nil, nil)
 	defer iter.Release()
+
+	log.Println("The number of checked accounts has achieved", 0)
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", 0)
 
 	// 遍历键值对
 	count := 1
 	for iter.Next() {
 		key := string(iter.Key())
 		balance := sdb.GetBalance(common.HexToAddress(key))
-		log.Println("Address", key, "Balance", balance)
+		if balance.Cmp(Balance) != 0 {
+			log.Println("Address", key, "Balance", balance)
+			fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "Address", key, "Balance", balance)
+		}
+
+		if count%100000 == 0 {
+			hash, _ := sdb.Commit(false)
+			sdb.Database().TrieDB().Commit(hash, false)
+			log.Println("The number of checked accounts has achieved", count)
+			fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", count)
+		}
 		count += 1
 	}
 

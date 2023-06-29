@@ -930,9 +930,6 @@ func TestStateDBForHundredMillionTwo(t *testing.T) {
 	nativedb, _ := openLeveldb(nativeDBPath, true)
 	defer nativedb.Close()
 
-	accountdb, _ := openLeveldb(StateDBPath6+"/all accounts", false)
-	defer accountdb.Close()
-
 	min, max, addSpan := big.NewInt(12000001), big.NewInt(12050000), big.NewInt(1)
 	for i := min; i.Cmp(max) == -1; i = i.Add(i, addSpan) {
 		txs, _ := pureData.GetTransactionsByNumber(nativedb, i)
@@ -960,6 +957,5 @@ func TestStateDBForHundredMillionTwo(t *testing.T) {
 
 	hash, _ := sdb.Commit(false)
 	sdb.Database().TrieDB().Commit(hash, false)
-	accountdb.Put([]byte(rootHash), []byte(hash.String()), nil)
 	log.Println(rootHash, hash.String())
 }
