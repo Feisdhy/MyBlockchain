@@ -43,6 +43,11 @@ type (
 		Root     common.Hash // merkle root of the storage trie
 		CodeHash []byte
 	}
+
+	output struct {
+		Time1 int64
+		Time2 int64
+	}
 )
 
 var (
