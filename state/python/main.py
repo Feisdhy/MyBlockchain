@@ -1,13 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-import pandas as pd
-import matplotlib.pyplot as plt
-
 
 def csv1():
     # 读取CSV文件
-    df = pd.read_csv('file/output_1.csv')
+    df = pd.read_csv('../file/output_1.csv')
 
     # 提取x轴和y轴数据
     x = df['accounts']
@@ -18,13 +15,14 @@ def csv1():
     plt.xlabel('accumulated accounts')
     plt.ylabel('accumulated time/s')
     plt.title('Ethereum StateDB insertion for 10000W accounts')
+    plt.savefig('../file/output_1.png')
     plt.show()
-    plt.savefig('file/output_1.png')
+    plt.close()
 
 
 def csv2():
     # 读取CSV文件
-    df = pd.read_csv('file/output_2.csv')
+    df = pd.read_csv('../file/output_2.csv')
 
     # 提取x轴和y轴数据
     x = df['accounts']
@@ -35,8 +33,9 @@ def csv2():
     plt.xlabel('accumulated accounts')
     plt.ylabel('commitment time/ns')
     plt.title('Ethereum StateDB insertion for 10000W accounts')
+    plt.savefig('../file/output_2.png')
     plt.show()
-    plt.savefig('file/output_2.png')
+    plt.close()
 
 
 if __name__ == '__main__':

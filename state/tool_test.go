@@ -73,6 +73,7 @@ func TestTxt2Csv(t *testing.T) {
 	writer2 := csv.NewWriter(file3)
 
 	writer1.Write([]string{"accounts", "time"})
+
 	writer2.Write([]string{"accounts", "time"})
 
 	for i := 0; i <= 100000000; i += 100000 {

@@ -1,6 +1,7 @@
 package state
 
 import (
+	"MyBlockchain/state/account"
 	"MyBlockchain/state/config"
 	"MyBlockchain/state/database"
 	"fmt"
@@ -676,7 +677,7 @@ func TestCreateTenMillion(t *testing.T) {
 	batch := new(leveldb.Batch)
 	for i := 1; i <= 7165114; i++ {
 		for {
-			address := Address().String()
+			address := account.Address().String()
 			_, ok := mapping[address]
 			if !ok {
 				mapping[address] = ""
@@ -854,7 +855,7 @@ func TestCreateHundredMillion(t *testing.T) {
 	batch := new(leveldb.Batch)
 	for i := 1; i <= 90000000; i++ {
 		for {
-			address := Address().String()
+			address := account.Address().String()
 			_, err := db.Get([]byte(address), nil)
 			if err != nil {
 				batch.Put([]byte(address), []byte(""))

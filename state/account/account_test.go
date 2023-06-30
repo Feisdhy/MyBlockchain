@@ -1,4 +1,4 @@
-package state
+package account
 
 import (
 	"crypto/ecdsa"

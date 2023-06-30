@@ -1,7 +1,6 @@
 package state
 
 import (
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"math/big"
 )
@@ -36,13 +35,13 @@ type (
 		IsContract bool
 	}
 
-	account struct {
-		Address  common.Address
-		Nonce    uint64
-		Balance  *big.Int
-		Root     common.Hash // merkle root of the storage trie
-		CodeHash []byte
-	}
+	//account struct {
+	//	Address  common.Address
+	//	Nonce    uint64
+	//	Balance  *big.Int
+	//	Root     common.Hash // merkle root of the storage trie
+	//	CodeHash []byte
+	//}
 
 	output struct {
 		Time1 int64
