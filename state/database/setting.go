@@ -5,12 +5,12 @@ import (
 )
 
 const (
-	StateDBPath1 = "D:/Project/leveldb/state/trie leveldb in 1W"
-	StateDBPath2 = "D:/Project/leveldb/state/trie leveldb in 10W"
-	StateDBPath3 = "D:/Project/leveldb/state/trie leveldb in 100W"
-	StateDBPath4 = "D:/Project/leveldb/state/trie leveldb in 2834886"
-	StateDBPath5 = "D:/Project/leveldb/state/trie leveldb in 1000W"
-	StateDBPath6 = "../leveldb"
+	StateDBPath1 = "/home/fuzh/leveldb/state/trie_leveldb_in_1W"
+	StateDBPath2 = "/home/fuzh/leveldb/state/trie_leveldb_in_10W"
+	StateDBPath3 = "/home/fuzh/leveldb/state/trie_leveldb_in_100W"
+	StateDBPath4 = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886"
+	StateDBPath5 = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W"
+	StateDBPath6 = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W"
 )
 
 type RawConfig struct {
@@ -23,7 +23,57 @@ type RawConfig struct {
 }
 
 func defaultRawConfig() *RawConfig {
-	path := StateDBPath6
+	path := StateDBPath1
+	if runtime.GOOS == "darwin" { // MacOS
+		return &RawConfig{
+			Path:      path,
+			Cache:     2048,
+			Handles:   5120,
+			Ancient:   path + "/ancient",
+			Namespace: "state/" + path,
+			ReadOnly:  false,
+		}
+	} else {
+		return &RawConfig{
+			Path:      path,
+			Cache:     2048,
+			Handles:   5120,
+			Ancient:   path + "/ancient",
+			Namespace: "state/" + path,
+			ReadOnly:  false,
+		}
+	}
+}
+
+func defaultRawConfigWithSwitch(i int) *RawConfig {
+	var path string
+	switch i {
+	case 1:
+		{
+			path = StateDBPath1
+		}
+	case 2:
+		{
+			path = StateDBPath2
+		}
+	case 3:
+		{
+			path = StateDBPath3
+		}
+	case 4:
+		{
+			path = StateDBPath4
+		}
+	case 5:
+		{
+			path = StateDBPath5
+		}
+	case 6:
+		{
+			path = StateDBPath6
+		}
+	}
+
 	if runtime.GOOS == "darwin" { // MacOS
 		return &RawConfig{
 			Path:      path,

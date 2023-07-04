@@ -8,6 +8,7 @@ import (
 	"github.com/DarcyWep/pureData/transaction"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/syndtr/goleveldb/leveldb"
 	"log"
 	"math/big"
@@ -247,4 +248,240 @@ func TestForHundredMillionOne() {
 	if err := iter.Error(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func Leveldb(i int) {
+	var (
+		path   string
+		number int
+		name   string
+	)
+
+	switch i {
+	case 1:
+		{
+			path = StateDBPath1
+			number = 1000
+			name = "trie_leveldb_in_1W"
+		}
+	case 2:
+		{
+			path = StateDBPath2
+			number = 10000
+			name = "trie_leveldb_in_10W"
+		}
+	case 3:
+		{
+			path = StateDBPath3
+			number = 100000
+			name = "trie_leveldb_in_100W"
+		}
+	case 4:
+		{
+			path = StateDBPath4
+			number = 100000
+		}
+	case 5:
+		{
+			path = StateDBPath5
+			number = 100000
+			name = "trie_leveldb_in_1000W"
+		}
+	case 6:
+		{
+			path = StateDBPath6
+			number = 100000
+			name = "trie_leveldb_in_10000W"
+		}
+	}
+
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is started!")
+	fmt.Println()
+
+	_, err := os.Stat(path + "/process.txt")
+	if err != nil {
+		accountdb1, _ := openLeveldb(path+"/accounts", false)
+		iter := accountdb1.NewIterator(nil, nil)
+
+		file1, _ := os.OpenFile(path+"/process.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		log.SetOutput(file1)
+
+		count := 1
+
+		batch := new(leveldb.Batch)
+		for iter.Next() {
+			key := string(iter.Key())
+			if key == rootHash {
+				continue
+			} else {
+				value := []byte(key)
+				batch.Delete([]byte(key))
+				key = common.Bytes2Hex(crypto.Keccak256([]byte(key)))
+				batch.Put([]byte("0x"+key), []byte(value))
+
+				count += 1
+				if count%number == 0 {
+					log.Println("The number of changed accounts has achieved", count)
+					fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", count)
+					accountdb1.Write(batch, nil)
+					batch.Reset()
+				}
+			}
+		}
+
+		accountdb1.Write(batch, nil)
+		batch.Reset()
+
+		if (count-1)%number != 0 {
+			log.Println("The number of changed accounts has achieved", count)
+			fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", count)
+		}
+
+		fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
+
+		file1.Close()
+		iter.Release()
+		accountdb1.Close()
+	}
+
+	//_, err = os.Stat(path + "/Process2.txt")
+	//if err != nil {
+	//	accountdb2, _ := openLeveldb(path+"/accounts", true)
+	//	iter2 := accountdb2.NewIterator(nil, nil)
+	//
+	//	count := 1
+	//
+	//	file2, _ := os.OpenFile(path+"/Process2.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	//	log.SetOutput(file2)
+	//
+	//	db, _ := database.OpenDatabaseWithFreezerAndSwitch(&config.DefaultsEthConfig, i)
+	//	defer db.Close()
+	//
+	//	hash, _ := accountdb2.Get([]byte(rootHash), nil)
+	//	sdb := database.NewStateDB(common.HexToHash(string(hash)), database.NewStateCache(db), nil)
+	//
+	//	for iter2.Next() {
+	//		key := string(iter2.Key())
+	//		value := string(iter2.Value())
+	//
+	//		if key == rootHash {
+	//			continue
+	//		} else {
+	//			balance := sdb.GetBalance(common.HexToAddress(value))
+	//			if balance.Cmp(Balance) != 0 {
+	//				log.Println("Address", value, "Balance", balance)
+	//			}
+	//			if count%number == 0 {
+	//				log.Println("The number of checked accounts has achieved", count)
+	//				fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", count)
+	//			}
+	//		}
+	//
+	//		count += 1
+	//	}
+	//
+	//	if (count-1)%number != 0 {
+	//		log.Println("The number of changed accounts has achieved", count)
+	//		fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", count)
+	//	}
+	//
+	//	file2.Close()
+	//	iter2.Release()
+	//	accountdb2.Close()
+	//}
+
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is completed!")
+	fmt.Println()
+}
+
+func TestLeveldb(i int) {
+	var (
+		path   string
+		number int
+		name   string
+	)
+
+	switch i {
+	case 1:
+		{
+			path = StateDBPath1
+			number = 10000
+			name = "trie_leveldb_in_1W"
+		}
+	case 2:
+		{
+			path = StateDBPath2
+			number = 100000
+			name = "trie_leveldb_in_10W"
+		}
+	case 3:
+		{
+			path = StateDBPath3
+			number = 100000
+			name = "trie_leveldb_in_100W"
+		}
+	case 4:
+		{
+			path = StateDBPath4
+			number = 100000
+		}
+	case 5:
+		{
+			path = StateDBPath5
+			number = 100000
+			name = "trie_leveldb_in_1000W"
+		}
+	case 6:
+		{
+			path = StateDBPath6
+			number = 100000
+			name = "trie_leveldb_in_10000W"
+		}
+	}
+
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is started!")
+	fmt.Println()
+
+	_, err := os.Stat(path + "/result.txt")
+	if err != nil {
+		accountdb, _ := openLeveldb(path+"/accounts", true)
+		iter := accountdb.NewIterator(nil, nil)
+
+		count := 1
+
+		file, _ := os.OpenFile(path+"/result.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		log.SetOutput(file)
+
+		db, _ := database.OpenDatabaseWithFreezerAndSwitch(&config.DefaultsEthConfig, i)
+		defer db.Close()
+
+		hash, _ := accountdb.Get([]byte(rootHash), nil)
+		sdb := database.NewStateDB(common.HexToHash(string(hash)), database.NewStateCache(db), nil)
+
+		for iter.Next() {
+			key := string(iter.Key())
+			value := string(iter.Value())
+
+			if key == rootHash {
+				continue
+			} else {
+				startTime := time.Now()
+				sdb.GetBalance(common.HexToAddress(value))
+				log.Println(value, time.Since(startTime).Nanoseconds())
+			}
+
+			if count == number {
+				break
+			}
+
+			count += 1
+		}
+
+		file.Close()
+		iter.Release()
+		accountdb.Close()
+	}
+
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is completed!")
+	fmt.Println()
 }

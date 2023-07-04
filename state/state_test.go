@@ -97,18 +97,18 @@ func TestShowAllAccounts(t *testing.T) {
 }
 
 func TestStateDB(t *testing.T) {
-	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
+	db, _ := database.OpenDatabaseWithFreezerAndSwitch(&config.DefaultsEthConfig, 2)
 	defer db.Close()
 
 	//sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
-	sdb := database.NewStateDB(common.HexToHash("0x9ae8603e271652576a83b33908facc1780e237e553eb602b43c7183116d7bd51"), database.NewStateCache(db), nil)
+	sdb := database.NewStateDB(common.HexToHash("0x1ee6be866b323731bd1faa7fed30945fe46871ec12a8d8a1e86033dd64ddd642"), database.NewStateCache(db), nil)
 
 	//sdb.GetOrNewStateObject(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
 	//sdb.SetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"), big.NewInt(1000))
 	//hash, _ := sdb.Commit(false)
 	//fmt.Println(hash)
 
-	balance := sdb.GetBalance(common.HexToAddress("0xEf8801eaf234ff82801821FFe2d78D60a0237F97"))
+	balance := sdb.GetBalance(common.HexToAddress("0xbec6FFDc58B8A2a3097D81Ae92910CbaBe3865cE"))
 	fmt.Println(balance)
 
 	//hash, _ := sdb.Commit(false)
@@ -117,7 +117,7 @@ func TestStateDB(t *testing.T) {
 }
 
 func TestShowAccountsAndRoot(t *testing.T) {
-	db, _ := openLeveldb(StateDBPath5+"/all accounts", true)
+	db, _ := openLeveldb(StateDBPath2+"/accounts", true)
 	defer db.Close()
 
 	// 创建迭代器
@@ -147,7 +147,11 @@ func TestStateDBForTenThousand(t *testing.T) {
 	sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
 	//sdb := database.NewStateDB(common.HexToHash("0xf9f0f433e2ea6ec0e88884355cfb519b3289a09cb81d4499de48afd8c064ba69"), database.NewStateCache(db), nil)
 
-	nativedb, _ := openLeveldb(nativeDBPath, true)
+	nativedb, err := openLeveldb(nativeDBPath, true)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	defer nativedb.Close()
 
 	accountdb, _ := openLeveldb(StateDBPath1+"/accounts", false)

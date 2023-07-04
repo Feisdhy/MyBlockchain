@@ -8,16 +8,16 @@ import (
 const (
 	minCache      = 2048
 	minHandles    = 2048
-	nativeDBPath  = "../leveldb/native"
-	accountDBPath = "D:/Project/leveldb/state/account leveldb"
+	nativeDBPath  = "/home/fuzh/leveldb/abi/native_leveldb"
+	accountDBPath = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/accounts"
 
 	rootHash     = "ROOT_HASH"
-	StateDBPath1 = "D:/Project/leveldb/state/trie leveldb in 1W"
-	StateDBPath2 = "D:/Project/leveldb/state/trie leveldb in 10W"
-	StateDBPath3 = "D:/Project/leveldb/state/trie leveldb in 100W"
-	StateDBPath4 = "D:/Project/leveldb/state/trie leveldb in 2834886"
-	StateDBPath5 = "D:/Project/leveldb/state/trie leveldb in 1000W"
-	StateDBPath6 = "../leveldb"
+	StateDBPath1 = "/home/fuzh/leveldb/state/trie_leveldb_in_1W"
+	StateDBPath2 = "/home/fuzh/leveldb/state/trie_leveldb_in_10W"
+	StateDBPath3 = "/home/fuzh/leveldb/state/trie_leveldb_in_100W"
+	StateDBPath4 = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886"
+	StateDBPath5 = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W"
+	StateDBPath6 = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W"
 )
 
 type (

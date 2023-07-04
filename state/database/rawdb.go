@@ -35,6 +35,31 @@ func OpenDatabaseWithFreezer(ethConfig *config.EthConfig) (ethdb.Database, error
 	return db, err
 }
 
+func OpenDatabaseWithFreezerAndSwitch(ethConfig *config.EthConfig, i int) (ethdb.Database, error) {
+	rawConfig := defaultRawConfigWithSwitch(i)
+
+	if ethConfig.NoPruning && ethConfig.TrieDirtyCache > 0 {
+		if ethConfig.SnapshotCache > 0 {
+			ethConfig.TrieCleanCache += ethConfig.TrieDirtyCache * 3 / 5
+			ethConfig.SnapshotCache += ethConfig.TrieDirtyCache * 2 / 5
+		} else {
+			ethConfig.TrieCleanCache += ethConfig.TrieDirtyCache
+		}
+		ethConfig.TrieDirtyCache = 0
+	}
+
+	db, err := rawdb.Open(rawdb.OpenOptions{
+		Type:              "",
+		Directory:         rawConfig.Path,
+		AncientsDirectory: rawConfig.Ancient,
+		Namespace:         rawConfig.Namespace,
+		Cache:             ethConfig.DatabaseCache,
+		Handles:           rawConfig.Handles,
+		ReadOnly:          rawConfig.ReadOnly,
+	})
+	return db, err
+}
+
 func GetBlockByNumber(db ethdb.Database, number *big.Int) (*types.Block, error) {
 	var (
 		block *types.Block
