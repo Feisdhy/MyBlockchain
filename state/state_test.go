@@ -117,7 +117,7 @@ func TestStateDB(t *testing.T) {
 }
 
 func TestShowAccountsAndRoot(t *testing.T) {
-	db, _ := openLeveldb(StateDBPath2+"/accounts", true)
+	db, _ := openLeveldb(StateDBPath6+"/accounts", true)
 	defer db.Close()
 
 	// 创建迭代器

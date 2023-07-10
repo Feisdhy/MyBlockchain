@@ -12,51 +12,36 @@ config = {
 rcParams.update(config)
 
 
-def get_data(csv_path, col):
+def getdata(path, col):
     datas = []
-    with open(csv_path) as rw:
-        next(rw)
-        next(rw)
-        for line in rw:
+    with open(path) as data:
+        next(data)
+        for line in data:
             lines = line.replace("\n", "").split(",")
-            if col == 0:
-                datas.append(int(lines[col]))
-            else:
-                datas.append(float(lines[col]) / 1000000000)
-            # print(lines)
-
+            datas.append(int(lines[col]) / float(1000000000))
     return datas
 
 
-def draw_rw_rate():
-    # accounts = get_data("output_2.csv", 0)
-    times = get_data("../file/output_2.csv", 1)
+def figure():
+    #datas1 = getdata("../file/construction for 10000W accounts/output1.csv", 1)
+    datas2 = getdata("../file/construction for 10000W accounts/output2.csv", 1)
 
-    x = np.arange(0, 1000, 1)
+    plt.figure(figsize=(10, 7))
 
-    plt.figure(figsize=(7, 4.8), )
+    x = np.arange(0, 10000, 10)
+    #plt.plot(x, datas1, '', color='#4472C4', markerfacecolor='none', label='SetBalance and Commitment')
+    plt.plot(x, datas2, '', color='#FFC000', markerfacecolor='none', label='Commitment')
 
-    plt.plot(x, times, '', color='#366DD8', markerfacecolor='none', label="Block STM", lw=2)
-    plt.yticks(range(1, 12, 2), ['1', '3', '5', '7', '9', '11'], fontsize=24)
-    plt.xticks(range(0, 1001, 200), ['0', '2', '4', '6', '8', '10'], fontsize=24)
-    plt.xlabel("账户数量 (千万)", fontsize=26)
-    plt.ylabel("MPT写入时延 (s)", fontsize=26)
-    plt.ylim(1, 12)
+    plt.xlabel("Account (1W)", fontsize=20, labelpad=10)
+    plt.ylabel("Time (second)", fontsize=20, labelpad=10)
+    plt.title("Ethereum MPT Construction Time", fontsize=24, pad=15)
+    # plt.title("Ethereum MPT Construction Time", fontsize=24, pad=15, fontweight='bold')
 
-    plt.subplots_adjust(bottom=0.2, left=0.15)
-    plt.grid(axis='y')
-    # ax = plt.gca()
-    # ax.margins(0.01)
-    # plt.tight_layout()
-    # font = {'size': 18, 'weight': "normal"}
-    # plt.legend(bbox_to_anchor=(1.035, 1.26), loc=1, frameon=False, prop=font, ncol=2,
-    #            labelspacing=0.3, columnspacing=1, handletextpad=1, handlelength=2)
-    plt.savefig("insert.eps", bbox_inches='tight', pad_inches=0.0)
+    plt.legend(fontsize=16)
+    plt.savefig("../file/construction for 10000W accounts/output3.png")
     plt.show()
 
 
 if __name__ == '__main__':
-    draw_rw_rate()
-    # get_data("../data/classic.csv")
-
+    figure()
 

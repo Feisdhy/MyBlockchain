@@ -101,27 +101,24 @@ func StateDB() {
 }
 
 func MPTForHundredMillionOne() {
-	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
+	db, _ := database.OpenDatabaseWithFreezerAndSwitch(&config.DefaultsEthConfig, 6)
 	defer db.Close()
 
 	sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
 	//sdb := database.NewStateDB(common.HexToHash("0xa18bd9c951b0d0fd85e3692716a2e60cde7037044aaa886c3be2e501e7378264"), database.NewStateCache(db), nil)
 
-	accountdb, _ := openLeveldb(StateDBPath6+"/accounts", true)
+	accountdb, _ := openLeveldb(StateDBPath6+"/accounts", false)
 	defer accountdb.Close()
 
-	file, _ := os.OpenFile(StateDBPath6+"/output.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	file, _ := os.OpenFile(StateDBPath6+"/output1.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	defer file.Close()
-
-	// 设置日志输出到文件
-	log.SetOutput(file)
 
 	// 创建迭代器
 	iter := accountdb.NewIterator(nil, nil)
 	defer iter.Release()
 
 	log.Println("The number of accounts has achieved", 0, "The time of the commitment is", 0)
-	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of accounts has achieved", 0)
+	fmt.Fprintln(file, time.Now().Format("2006-01-02 15:04:05.000000000"), "The number of accounts has achieved", 0, "The time of the commitment is", 0)
 
 	// 遍历键值对
 	count := 1
@@ -133,8 +130,9 @@ func MPTForHundredMillionOne() {
 			startTime := time.Now()
 			hash, _ := sdb.Commit(false)
 			sdb.Database().TrieDB().Commit(hash, false)
-			log.Println("The number of accounts has achieved", count, "The time of the commitment is", time.Since(startTime).Nanoseconds())
-			fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of accounts has achieved", count)
+			distance := time.Since(startTime).Nanoseconds()
+			log.Println("The number of accounts has achieved", count, "The time of the commitment is", distance)
+			fmt.Fprintln(file, time.Now().Format("2006-01-02 15:04:05.000000000"), "The number of accounts has achieved", count, "The time of the commitment is", distance)
 		}
 
 		count += 1
@@ -147,25 +145,27 @@ func MPTForHundredMillionOne() {
 
 	hash, _ := sdb.Commit(false)
 	sdb.Database().TrieDB().Commit(hash, false)
+	accountdb.Put([]byte(rootHash), []byte(hash.String()), nil)
 	log.Println(rootHash, hash.String())
-	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), rootHash, hash.String())
+	fmt.Fprintln(file, time.Now().Format("2006-01-02 15:04:05.000000000"), rootHash, hash.String())
 }
 
 func MPTForHundredMillionTwo() {
-	db, _ := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
+	db, _ := database.OpenDatabaseWithFreezerAndSwitch(&config.DefaultsEthConfig, 6)
 	defer db.Close()
 
+	accountdb, _ := openLeveldb(StateDBPath6+"/accounts", false)
+	defer accountdb.Close()
+
+	root_hash, _ := accountdb.Get([]byte(rootHash), nil)
 	//sdb := database.NewStateDB(types.EmptyRootHash, database.NewStateCache(db), nil)
-	sdb := database.NewStateDB(common.HexToHash("0x5be16d8197509546ee5ef661a2c8c06ca088d1daa1528696dfa91bf8f7935b68"), database.NewStateCache(db), nil)
+	sdb := database.NewStateDB(common.HexToHash(string(root_hash)), database.NewStateCache(db), nil)
 
 	nativedb, _ := openLeveldb(nativeDBPath, true)
 	defer nativedb.Close()
 
-	file, _ := os.OpenFile(StateDBPath6+"/output1.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	file, _ := os.OpenFile(StateDBPath6+"/output2.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	defer file.Close()
-
-	// 设置日志输出到文件
-	log.SetOutput(file)
 
 	min, max, addSpan := big.NewInt(12000001), big.NewInt(12050000), big.NewInt(1)
 	for i := min; i.Cmp(max) == -1; i = i.Add(i, addSpan) {
@@ -186,20 +186,23 @@ func MPTForHundredMillionTwo() {
 			}
 		}
 
+		startTime := time.Now()
 		hash, _ := sdb.Commit(false)
 		sdb.Database().TrieDB().Commit(hash, false)
+		difference := time.Since(startTime).Nanoseconds()
 
-		log.Println("Block", i.String(), "is completed!")
-		fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "Block", i.String(), "is completed!")
+		log.Println("Block", i.String(), "is completed!", "The time of the commitment is", difference)
+		fmt.Fprintln(file, time.Now().Format("2006-01-02 15:04:05.000000000"), "Block", i.String(), "is completed!", "The time of the commitment is", difference)
 	}
 
 	hash, _ := sdb.Commit(false)
 	sdb.Database().TrieDB().Commit(hash, false)
+	accountdb.Put([]byte(rootHash), []byte(hash.String()), nil)
 	log.Println(rootHash, hash.String())
-	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), rootHash, hash.String())
+	fmt.Fprintln(file, time.Now().Format("2006-01-02 15:04:05.000000000"), rootHash, hash.String())
 }
 
-func TestForHundredMillionOne() {
+func TestForHundredMillion() {
 	db, err := database.OpenDatabaseWithFreezer(&config.DefaultsEthConfig)
 	if err != nil {
 		fmt.Println(err)
@@ -212,7 +215,7 @@ func TestForHundredMillionOne() {
 	accountdb, _ := openLeveldb(StateDBPath6+"/accounts", true)
 	defer accountdb.Close()
 
-	file, _ := os.OpenFile(StateDBPath6+"/output2.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	file, _ := os.OpenFile(StateDBPath6+"/test.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	defer file.Close()
 
 	// 设置日志输出到文件
@@ -229,6 +232,10 @@ func TestForHundredMillionOne() {
 	count := 1
 	for iter.Next() {
 		key := string(iter.Key())
+		if key == rootHash {
+			continue
+		}
+
 		balance := sdb.GetBalance(common.HexToAddress(key))
 		if balance.Cmp(Balance) != 0 {
 			log.Println("Address", key, "Balance", balance)
@@ -280,6 +287,7 @@ func Leveldb(i int) {
 		{
 			path = StateDBPath4
 			number = 100000
+			name = "trie_leveldb_in_2834886"
 		}
 	case 5:
 		{
@@ -296,40 +304,42 @@ func Leveldb(i int) {
 	}
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is started!")
-	fmt.Println()
 
-	_, err := os.Stat(path + "/process.txt")
+	_, err := os.Stat(path + "/experiment/process.txt")
 	if err != nil {
-		accountdb1, _ := openLeveldb(path+"/accounts", false)
+		accountdb1, _ := openLeveldb(path+"/accounts", true)
 		iter := accountdb1.NewIterator(nil, nil)
 
-		file1, _ := os.OpenFile(path+"/process.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		accountdb2, _ := openLeveldb(path+"/random accounts", false)
+
+		file1, _ := os.OpenFile(path+"/experiment/process.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 		log.SetOutput(file1)
 
 		count := 1
-
 		batch := new(leveldb.Batch)
 		for iter.Next() {
 			key := string(iter.Key())
+			value := string(iter.Value())
+
 			if key == rootHash {
+				batch.Put([]byte(key), []byte(value))
 				continue
 			} else {
-				value := []byte(key)
-				batch.Delete([]byte(key))
+				newvalue := []byte(key)
 				key = common.Bytes2Hex(crypto.Keccak256([]byte(key)))
-				batch.Put([]byte("0x"+key), []byte(value))
+				batch.Put([]byte("0x"+key), newvalue)
 
 				count += 1
 				if count%number == 0 {
 					log.Println("The number of changed accounts has achieved", count)
 					fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", count)
-					accountdb1.Write(batch, nil)
+					accountdb2.Write(batch, nil)
 					batch.Reset()
 				}
 			}
 		}
 
-		accountdb1.Write(batch, nil)
+		accountdb2.Write(batch, nil)
 		batch.Reset()
 
 		if (count-1)%number != 0 {
@@ -337,11 +347,10 @@ func Leveldb(i int) {
 			fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", count)
 		}
 
-		fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
-
 		file1.Close()
 		iter.Release()
 		accountdb1.Close()
+		accountdb2.Close()
 	}
 
 	//_, err = os.Stat(path + "/Process2.txt")
@@ -424,6 +433,7 @@ func TestLeveldb(i int) {
 		{
 			path = StateDBPath4
 			number = 100000
+			name = "trie_leveldb_in_2834886"
 		}
 	case 5:
 		{
@@ -440,47 +450,155 @@ func TestLeveldb(i int) {
 	}
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is started!")
-	fmt.Println()
 
-	_, err := os.Stat(path + "/result.txt")
-	if err != nil {
-		accountdb, _ := openLeveldb(path+"/accounts", true)
-		iter := accountdb.NewIterator(nil, nil)
+	accountdb, _ := openLeveldb(path+"/accounts", true)
+	iter := accountdb.NewIterator(nil, nil)
 
-		count := 1
+	file, _ := os.OpenFile(path+"/experiment/sequential read result.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	log.SetOutput(file)
 
-		file, _ := os.OpenFile(path+"/result.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
-		log.SetOutput(file)
+	db, _ := database.OpenDatabaseWithFreezerAndSwitch(&config.DefaultsEthConfig, i)
+	defer db.Close()
 
-		db, _ := database.OpenDatabaseWithFreezerAndSwitch(&config.DefaultsEthConfig, i)
-		defer db.Close()
+	hash, _ := accountdb.Get([]byte(rootHash), nil)
+	sdb := database.NewStateDB(common.HexToHash(string(hash)), database.NewStateCache(db), nil)
 
-		hash, _ := accountdb.Get([]byte(rootHash), nil)
-		sdb := database.NewStateDB(common.HexToHash(string(hash)), database.NewStateCache(db), nil)
+	count := 1
+	for iter.Next() {
+		key := string(iter.Key())
+		value := string(iter.Value())
 
-		for iter.Next() {
-			key := string(iter.Key())
-			value := string(iter.Value())
-
-			if key == rootHash {
-				continue
-			} else {
-				startTime := time.Now()
-				sdb.GetBalance(common.HexToAddress(value))
-				log.Println(value, time.Since(startTime).Nanoseconds())
-			}
-
-			if count == number {
-				break
-			}
-
-			count += 1
+		if key == rootHash {
+			continue
+		} else {
+			startTime := time.Now()
+			sdb.GetBalance(common.HexToAddress(value))
+			log.Println(value, time.Since(startTime).Nanoseconds())
 		}
 
-		file.Close()
-		iter.Release()
-		accountdb.Close()
+		if count == number {
+			break
+		}
+
+		count += 1
 	}
+
+	file.Close()
+	iter.Release()
+	accountdb.Close()
+
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is completed!")
+	fmt.Println("------------------------------------------------------------------------------------------------")
+}
+
+func TestLeveldb1(i int) {
+	var (
+		path   string
+		number int
+		name   string
+	)
+
+	switch i {
+	case 1:
+		{
+			path = StateDBPath1
+			number = 10000
+			name = "trie_leveldb_in_1W"
+		}
+	case 2:
+		{
+			path = StateDBPath2
+			number = 100000
+			name = "trie_leveldb_in_10W"
+		}
+	case 3:
+		{
+			path = StateDBPath3
+			number = 100000
+			name = "trie_leveldb_in_100W"
+		}
+	case 4:
+		{
+			path = StateDBPath4
+			number = 100000
+			name = "trie_leveldb_in_2834886"
+		}
+	case 5:
+		{
+			path = StateDBPath5
+			number = 100000
+			name = "trie_leveldb_in_1000W"
+		}
+	case 6:
+		{
+			path = StateDBPath6
+			number = 100000
+			name = "trie_leveldb_in_10000W"
+		}
+	}
+
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is started!")
+
+	accountdb, _ := openLeveldb(path+"/accounts", true)
+	iter := accountdb.NewIterator(nil, nil)
+
+	file1, _ := os.OpenFile(path+"/experiment/sequential read result1.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	log.SetOutput(file1)
+
+	db, _ := database.OpenDatabaseWithFreezerAndSwitch(&config.DefaultsEthConfig, i)
+	defer db.Close()
+
+	hash, _ := accountdb.Get([]byte(rootHash), nil)
+	sdb := database.NewStateDB(common.HexToHash(string(hash)), database.NewStateCache(db), nil)
+
+	count := 1
+	for iter.Next() {
+		key := string(iter.Key())
+		value := string(iter.Value())
+
+		if key == rootHash {
+			continue
+		} else {
+			startTime := time.Now()
+			sdb.GetBalance(common.HexToAddress(value))
+			log.Println(value, time.Since(startTime).Nanoseconds())
+		}
+
+		if count == number {
+			break
+		}
+
+		count += 1
+	}
+
+	file2, _ := os.OpenFile(path+"/experiment/sequential read result2.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	log.SetOutput(file2)
+
+	count = 1
+	iter = accountdb.NewIterator(nil, nil)
+	for iter.Next() {
+		key := string(iter.Key())
+		value := string(iter.Value())
+
+		if key == rootHash {
+			continue
+		} else {
+			startTime := time.Now()
+			sdb.GetBalance(common.HexToAddress(value))
+			log.Println(value, time.Since(startTime).Nanoseconds())
+		}
+
+		if count == number {
+			break
+		}
+
+		count += 1
+	}
+
+	file1.Close()
+	file2.Close()
+	iter.Release()
+	accountdb.Close()
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is completed!")
 	fmt.Println()
