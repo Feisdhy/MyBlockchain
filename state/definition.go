@@ -19,6 +19,8 @@ const (
 	StateDBPath4 = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886"
 	StateDBPath5 = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W"
 	StateDBPath6 = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W"
+
+	filepath = "/home/fuzh/leveldb/state"
 )
 
 type (
