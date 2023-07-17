@@ -81,38 +81,47 @@ func TestTxt2Csv(t *testing.T) {
 
 func TestTxt2CsvForSequentialRead(t *testing.T) {
 	for i := 1; i <= 6; i++ {
-		var path string
+		var (
+			path     string
+			division int64
+		)
 		switch i {
 		case 1:
 			{
 				path = "1W accounts"
+				division = 10000
 			}
 		case 2:
 			{
 				path = "10W accounts"
+				division = 100000
 			}
 		case 3:
 			{
 				path = "100W accounts"
+				division = 100000
 			}
 		case 4:
 			{
 				path = "2834886 accounts"
+				division = 100000
 			}
 		case 5:
 			{
 				path = "1000W accounts"
+				division = 100000
 			}
 		case 6:
 			{
 				path = "10000W accounts"
+				division = 100000
 			}
 
 		}
 
 		for j := 1; j <= 5; j++ {
-			file, _ := os.Open("file/" + path + "/sequential_read_result" + strconv.Itoa(j) + ".txt")
-			csvfile, _ := os.OpenFile("file/"+path+"/sequential read result.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+			file, _ := os.Open("file/tmp/" + path + "/sequential_read_result" + strconv.Itoa(j) + ".txt")
+			csvfile, _ := os.OpenFile("file/tmp/"+path+"/sequential read result.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 
 			writer := csv.NewWriter(csvfile)
 
@@ -129,10 +138,10 @@ func TestTxt2CsvForSequentialRead(t *testing.T) {
 				number, _ := strconv.ParseInt(matches[1], 10, 64)
 				count += number
 			}
-			result1 := count / 100000
+			result1 := count / division
 			fmt.Println(strconv.FormatInt(result1, 10))
 
-			file, _ = os.Open("file/" + path + "/sequential_read_result" + strconv.Itoa(j) + "_cache.txt")
+			file, _ = os.Open("file/tmp/" + path + "/sequential_read_result" + strconv.Itoa(j) + "_cache.txt")
 
 			count = int64(0)
 			scanner = bufio.NewScanner(file)
@@ -147,7 +156,7 @@ func TestTxt2CsvForSequentialRead(t *testing.T) {
 				number, _ := strconv.ParseInt(matches[1], 10, 64)
 				count += number
 			}
-			result2 := count / 100000
+			result2 := count / division
 			fmt.Println(strconv.FormatInt(result2, 10))
 
 			writer.Write([]string{strconv.FormatInt(result1, 10), strconv.FormatInt(result2, 10)})
@@ -446,7 +455,7 @@ func TestTxt2CsvForRandomWrite(t *testing.T) {
 }
 
 func TestCsv2CsvForSequentialRead(t *testing.T) {
-	file, _ := os.OpenFile("file/sequential read result.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	file, _ := os.OpenFile("file/tmp/sequential read result.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
@@ -482,30 +491,30 @@ func TestCsv2CsvForSequentialRead(t *testing.T) {
 
 		}
 
-		csvfile, _ := os.Open("file/" + path + "/sequential read result.csv")
+		csvfile, _ := os.Open("file/tmp/" + path + "/sequential read result.csv")
 		defer csvfile.Close()
 
 		scanner := bufio.NewScanner(csvfile)
 
-		//scanner.Scan()
-		//line := scanner.Text()
-		//results := strings.Split(line, ",")
-		//writer.Write([]string{results[0], results[1]})
+		scanner.Scan()
+		line := scanner.Text()
+		results := strings.Split(line, ",")
+		writer.Write([]string{results[0], results[1]})
 
-		number1, number2 := int64(0), int64(0)
-		for scanner.Scan() {
-			line := scanner.Text()
-			results := strings.Split(line, ",")
-
-			count, _ := strconv.ParseInt(results[0], 10, 64)
-			number1 += count
-
-			count, _ = strconv.ParseInt(results[1], 10, 64)
-			number2 += count
-		}
-		number1 /= 4
-		number2 /= 4
-		writer.Write([]string{strconv.FormatInt(number1, 10), strconv.FormatInt(number2, 10)})
+		//number1, number2 := int64(0), int64(0)
+		//for scanner.Scan() {
+		//	line := scanner.Text()
+		//	results := strings.Split(line, ",")
+		//
+		//	count, _ := strconv.ParseInt(results[0], 10, 64)
+		//	number1 += count
+		//
+		//	count, _ = strconv.ParseInt(results[1], 10, 64)
+		//	number2 += count
+		//}
+		//number1 /= 4
+		//number2 /= 4
+		//writer.Write([]string{strconv.FormatInt(number1, 10), strconv.FormatInt(number2, 10)})
 	}
 }
 

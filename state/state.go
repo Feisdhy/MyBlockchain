@@ -353,52 +353,6 @@ func Leveldb(i int) {
 		accountdb2.Close()
 	}
 
-	//_, err = os.Stat(path + "/Process2.txt")
-	//if err != nil {
-	//	accountdb2, _ := openLeveldb(path+"/accounts", true)
-	//	iter2 := accountdb2.NewIterator(nil, nil)
-	//
-	//	count := 1
-	//
-	//	file2, _ := os.OpenFile(path+"/Process2.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
-	//	log.SetOutput(file2)
-	//
-	//	db, _ := database.OpenDatabaseWithFreezerAndSwitch(&config.DefaultsEthConfig, i)
-	//	defer db.Close()
-	//
-	//	hash, _ := accountdb2.Get([]byte(rootHash), nil)
-	//	sdb := database.NewStateDB(common.HexToHash(string(hash)), database.NewStateCache(db), nil)
-	//
-	//	for iter2.Next() {
-	//		key := string(iter2.Key())
-	//		value := string(iter2.Value())
-	//
-	//		if key == rootHash {
-	//			continue
-	//		} else {
-	//			balance := sdb.GetBalance(common.HexToAddress(value))
-	//			if balance.Cmp(Balance) != 0 {
-	//				log.Println("Address", value, "Balance", balance)
-	//			}
-	//			if count%number == 0 {
-	//				log.Println("The number of checked accounts has achieved", count)
-	//				fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", count)
-	//			}
-	//		}
-	//
-	//		count += 1
-	//	}
-	//
-	//	if (count-1)%number != 0 {
-	//		log.Println("The number of changed accounts has achieved", count)
-	//		fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The number of checked accounts has achieved", count)
-	//	}
-	//
-	//	file2.Close()
-	//	iter2.Release()
-	//	accountdb2.Close()
-	//}
-
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "The processing of", name, "is completed!")
 	fmt.Println()
 }
