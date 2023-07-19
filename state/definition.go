@@ -9,18 +9,18 @@ const (
 	minCache   = 2048
 	minHandles = 2048
 
-	nativeDBPath  = "/home/fuzh/leveldb/abi/native_leveldb"
-	accountDBPath = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/accounts"
+	nativeDBPath  = "/home/fuzh/copy4/abi/native_leveldb"
+	accountDBPath = "/home/fuzh/copy4/state/trie_leveldb_in_1W/accounts"
 
 	rootHash     = "ROOT_HASH"
-	StateDBPath1 = "/home/fuzh/leveldb/state/trie_leveldb_in_1W"
-	StateDBPath2 = "/home/fuzh/leveldb/state/trie_leveldb_in_10W"
-	StateDBPath3 = "/home/fuzh/leveldb/state/trie_leveldb_in_100W"
-	StateDBPath4 = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886"
-	StateDBPath5 = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W"
-	StateDBPath6 = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W"
+	StateDBPath1 = "/home/fuzh/copy4/state/trie_leveldb_in_1W"
+	StateDBPath2 = "/home/fuzh/copy4/state/trie_leveldb_in_10W"
+	StateDBPath3 = "/home/fuzh/copy4/state/trie_leveldb_in_100W"
+	StateDBPath4 = "/home/fuzh/copy4/state/trie_leveldb_in_2834886"
+	StateDBPath5 = "/home/fuzh/copy4/state/trie_leveldb_in_1000W"
+	StateDBPath6 = "/home/fuzh/copy4/state/trie_leveldb_in_10000W"
 
-	filepath = "/home/fuzh/leveldb/state"
+	filepath = "D:/Project/MyBlockchain/state/file"
 )
 
 type (

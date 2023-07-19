@@ -20,37 +20,37 @@ func Txt2CsvForSequentialRead() {
 		switch i {
 		case 1:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1W accounts"
 				division = 10000
 			}
 		case 2:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10W accounts"
 				division = 100000
 			}
 		case 3:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_100W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/100W accounts"
 				division = 1000000
 			}
 		case 4:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886/experiment"
+				path = "D:/Project/MyBlockchain/state/file/2834886 accounts"
 				division = 1000000
 			}
 		case 5:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1000W accounts"
 				division = 1000000
 			}
 		case 6:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10000W accounts"
 				division = 1000000
 			}
 		}
 
-		for j := 1; j <= 10; j++ {
+		for j := 1; j <= 3; j++ {
 			file, _ := os.Open(path + "/sequential_read_result" + strconv.Itoa(j) + ".txt")
 			csvfile, _ := os.OpenFile(path+"/sequential read result.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 
@@ -110,37 +110,37 @@ func Txt2CsvForSequentialWrite() {
 		switch i {
 		case 1:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1W accounts"
 				division = 10000
 			}
 		case 2:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10W accounts"
 				division = 100000
 			}
 		case 3:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_100W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/100W accounts"
 				division = 1000000
 			}
 		case 4:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886/experiment"
+				path = "D:/Project/MyBlockchain/state/file/2834886 accounts"
 				division = 1000000
 			}
 		case 5:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1000W accounts"
 				division = 1000000
 			}
 		case 6:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10000W accounts"
 				division = 1000000
 			}
 		}
 
-		for j := 1; j <= 10; j++ {
+		for j := 1; j <= 3; j++ {
 			file, _ := os.Open(path + "/sequential_write_result" + strconv.Itoa(j) + ".txt")
 			csvfile, _ := os.OpenFile(path+"/sequential write result.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 
@@ -221,37 +221,37 @@ func Txt2CsvForRandomRead() {
 		switch i {
 		case 1:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1W accounts"
 				division = 10000
 			}
 		case 2:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10W accounts"
 				division = 100000
 			}
 		case 3:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_100W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/100W accounts"
 				division = 1000000
 			}
 		case 4:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886/experiment"
+				path = "D:/Project/MyBlockchain/state/file/2834886 accounts"
 				division = 1000000
 			}
 		case 5:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1000W accounts"
 				division = 1000000
 			}
 		case 6:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10000W accounts"
 				division = 1000000
 			}
 		}
 
-		for j := 1; j <= 10; j++ {
+		for j := 1; j <= 3; j++ {
 			file, _ := os.Open(path + "/random_read_result" + strconv.Itoa(j) + ".txt")
 			csvfile, _ := os.OpenFile(path+"/random read result.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 
@@ -311,37 +311,37 @@ func Txt2CsvForRandomWrite() {
 		switch i {
 		case 1:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1W accounts"
 				division = 10000
 			}
 		case 2:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10W accounts"
 				division = 100000
 			}
 		case 3:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_100W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/100W accounts"
 				division = 1000000
 			}
 		case 4:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886/experiment"
+				path = "D:/Project/MyBlockchain/state/file/2834886 accounts"
 				division = 1000000
 			}
 		case 5:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1000W accounts"
 				division = 1000000
 			}
 		case 6:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10000W accounts"
 				division = 1000000
 			}
 		}
 
-		for j := 1; j <= 10; j++ {
+		for j := 1; j <= 3; j++ {
 			file, _ := os.Open(path + "/random_write_result" + strconv.Itoa(j) + ".txt")
 			csvfile, _ := os.OpenFile(path+"/random write result.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 
@@ -424,27 +424,27 @@ func Csv2CsvForSequentialRead() {
 		switch i {
 		case 1:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1W accounts"
 			}
 		case 2:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10W accounts"
 			}
 		case 3:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_100W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/100W accounts"
 			}
 		case 4:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886/experiment"
+				path = "D:/Project/MyBlockchain/state/file/2834886 accounts"
 			}
 		case 5:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1000W accounts"
 			}
 		case 6:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10000W accounts"
 			}
 		}
 
@@ -469,8 +469,8 @@ func Csv2CsvForSequentialRead() {
 			count, _ = strconv.ParseInt(results[1], 10, 64)
 			number2 += count
 		}
-		number1 /= 10
-		number2 /= 10
+		number1 /= 3
+		number2 /= 3
 		writer.Write([]string{strconv.FormatInt(number1, 10), strconv.FormatInt(number2, 10)})
 	}
 }
@@ -487,27 +487,27 @@ func Csv2CsvForSequentialWrite() {
 		switch i {
 		case 1:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1W accounts"
 			}
 		case 2:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10W accounts"
 			}
 		case 3:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_100W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/100W accounts"
 			}
 		case 4:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886/experiment"
+				path = "D:/Project/MyBlockchain/state/file/2834886 accounts"
 			}
 		case 5:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1000W accounts"
 			}
 		case 6:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10000W accounts"
 			}
 		}
 
@@ -544,12 +544,12 @@ func Csv2CsvForSequentialWrite() {
 			count, _ = strconv.ParseInt(results[5], 10, 64)
 			number6 += count
 		}
-		number1 /= 10
-		number2 /= 10
-		number3 /= 10
-		number4 /= 10
-		number5 /= 10
-		number6 /= 10
+		number1 /= 3
+		number2 /= 3
+		number3 /= 3
+		number4 /= 3
+		number5 /= 3
+		number6 /= 3
 		writer.Write([]string{strconv.FormatInt(number1, 10), strconv.FormatInt(number2, 10), strconv.FormatInt(number3, 10), strconv.FormatInt(number4, 10), strconv.FormatInt(number5, 10), strconv.FormatInt(number6, 10)})
 	}
 }
@@ -566,27 +566,27 @@ func Csv2CsvForRandomRead() {
 		switch i {
 		case 1:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1W accounts"
 			}
 		case 2:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10W accounts"
 			}
 		case 3:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_100W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/100W accounts"
 			}
 		case 4:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886/experiment"
+				path = "D:/Project/MyBlockchain/state/file/2834886 accounts"
 			}
 		case 5:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1000W accounts"
 			}
 		case 6:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10000W accounts"
 			}
 		}
 
@@ -611,8 +611,8 @@ func Csv2CsvForRandomRead() {
 			count, _ = strconv.ParseInt(results[1], 10, 64)
 			number2 += count
 		}
-		number1 /= 10
-		number2 /= 10
+		number1 /= 3
+		number2 /= 3
 		writer.Write([]string{strconv.FormatInt(number1, 10), strconv.FormatInt(number2, 10)})
 	}
 }
@@ -629,27 +629,27 @@ func Csv2CsvForRandomWrite() {
 		switch i {
 		case 1:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1W accounts"
 			}
 		case 2:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10W accounts"
 			}
 		case 3:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_100W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/100W accounts"
 			}
 		case 4:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_2834886/experiment"
+				path = "D:/Project/MyBlockchain/state/file/2834886 accounts"
 			}
 		case 5:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_1000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/1000W accounts"
 			}
 		case 6:
 			{
-				path = "/home/fuzh/leveldb/state/trie_leveldb_in_10000W/experiment"
+				path = "D:/Project/MyBlockchain/state/file/10000W accounts"
 			}
 		}
 
@@ -686,12 +686,12 @@ func Csv2CsvForRandomWrite() {
 			count, _ = strconv.ParseInt(results[5], 10, 64)
 			number6 += count
 		}
-		number1 /= 10
-		number2 /= 10
-		number3 /= 10
-		number4 /= 10
-		number5 /= 10
-		number6 /= 10
+		number1 /= 3
+		number2 /= 3
+		number3 /= 3
+		number4 /= 3
+		number5 /= 3
+		number6 /= 3
 		writer.Write([]string{strconv.FormatInt(number1, 10), strconv.FormatInt(number2, 10), strconv.FormatInt(number3, 10), strconv.FormatInt(number4, 10), strconv.FormatInt(number5, 10), strconv.FormatInt(number6, 10)})
 	}
 }
